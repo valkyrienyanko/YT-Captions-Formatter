@@ -27,6 +27,15 @@ void format_captions_file(char* file_name)
     {
         if (line[0] != '\n' && !contains_timestamp(line, (int)strlen(line))) 
         {
+            // Remove newline character at the end of the line
+            size_t len = strlen(line);
+            
+            if (len > 0 && line[len - 1] == '\n') 
+            {
+                line[len - 1] = '\0';
+            }
+            
+            // Keep track of line
             lines[line_count++] = strdup(line);
         }
     }
@@ -37,7 +46,7 @@ void format_captions_file(char* file_name)
     
     for (int i = 0; i < line_count; i++)
     {
-        fprintf(output_file, "%s", lines[i]);
+        fprintf(output_file, "%s ", lines[i]);
         free(lines[i]);
     }
     
