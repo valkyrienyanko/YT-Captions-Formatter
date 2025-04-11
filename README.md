@@ -20,7 +20,7 @@ to increase the brightness of say this
 
 This program will format it like so.
 ```
-so I have these two lights in my scene and let's say when I run the game I let's say I want to increase the brightness of say this
+so. I have these two lights in my scene and let's say when. I run the game. I let's say. I want to increase the brightness of say this
 ```
 
 ## How to Use
