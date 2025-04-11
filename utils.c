@@ -10,6 +10,35 @@
 #define MAX_LINE_LENGTH 256
 #define MAX_LINES 1000
 
+// For example: "hello World" becomes "hello. World"
+void add_periods_before_capitals(char *line) 
+{
+    int length = (int)strlen(line);
+    char* result = (char*)malloc(((size_t)length * 2 + 1) * sizeof(char));
+    
+    if (result == NULL) 
+    {
+        perror("Memory allocation failed");
+        exit(EXIT_FAILURE);
+    }
+    
+    int j = 0;
+
+    for (int i = 0; i < length; i++) 
+    {
+        if (i > 0 && isupper(line[i]) && line[i - 1] == ' ') 
+        {
+            result[j - 1] = '.';
+            result[j++] = ' ';
+        }
+        result[j++] = line[i];
+    }
+    
+    result[j] = '\0';
+    strcpy(line, result);
+    free(result);
+}
+
 void format_captions_file(char* file_name)
 {
     FILE* input_file = fopen(file_name, "r");
@@ -25,15 +54,18 @@ void format_captions_file(char* file_name)
 
     while (fgets(line, sizeof(line), input_file)) 
     {
-        if (line[0] != '\n' && !contains_timestamp(line, (int)strlen(line))) 
+        int line_length = (int)strlen(line);
+    
+        // This is not a blank line or a line that contains a timestamp
+        if (line[0] != '\n' && !contains_timestamp(line, line_length)) 
         {
             // Remove newline character at the end of the line
-            size_t len = strlen(line);
-            
-            if (len > 0 && line[len - 1] == '\n') 
+            if (line_length > 0 && line[line_length - 1] == '\n') 
             {
-                line[len - 1] = '\0';
+                line[line_length - 1] = '\0';
             }
+            
+            add_periods_before_capitals(line);
             
             // Keep track of line
             lines[line_count++] = strdup(line);
