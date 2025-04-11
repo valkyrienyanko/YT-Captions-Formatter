@@ -11,7 +11,7 @@
 #define MAX_LINES 1000
 
 // For example: "hello World" becomes "hello. World"
-void add_periods_before_capitals(char *line) 
+static void add_periods_before_capitals(char *line) 
 {
     int length = (int)strlen(line);
     char* result = (char*)malloc(((size_t)length * 2 + 1) * sizeof(char));
@@ -39,6 +39,15 @@ void add_periods_before_capitals(char *line)
     free(result);
 }
 
+static void trim(char* line)
+{
+    char* start = line;
+    while (isspace((unsigned char)*start)) start++;
+    char* end = line + strlen(line) - 1;
+    while (end > start && isspace((unsigned char)*end)) end--;
+    *(end + 1) = '\0';
+}
+
 void format_captions_file(char* file_name)
 {
     FILE* input_file = fopen(file_name, "r");
@@ -64,6 +73,9 @@ void format_captions_file(char* file_name)
             {
                 line[line_length - 1] = '\0';
             }
+            
+            // Remove whitespace characters from beginning and ending of line
+            trim(line);
             
             add_periods_before_capitals(line);
             
