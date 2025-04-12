@@ -64,6 +64,7 @@ void format_captions_file(char* file_name)
     char* lines[MAX_LINES];
     int line_count = 0;
 
+    // Keep track of lines we care about
     while (fgets(line, sizeof(line), input_file)) 
     {
         int line_length = (int)strlen(line);
@@ -87,6 +88,7 @@ void format_captions_file(char* file_name)
 
     fclose(input_file);
     
+    // Combine all lines into one string
     char* text = malloc(sizeof(char) * (size_t)line_count * MAX_LINE_LENGTH * 2); // * 2 to be sure enough space for periods?
     
     if (!text)
@@ -103,8 +105,22 @@ void format_captions_file(char* file_name)
         free(lines[i]);
     }
     
+    trim(text);
+    
+    // Make sure first character is uppercase
+    text[0] = (char)toupper((unsigned char)text[0]);
+    
+    // Make sure period is added at the very end
+    int text_length = (int)strlen(text);
+    if (text_length > 0 && text[text_length - 1] != '.') {
+        text[text_length] = '.';
+        text[text_length + 1] = '\0';
+    }
+    
+    // Add periods before capitals
     add_periods_before_capitals(text);
     
+    // Print to file
     FILE* output_file = fopen(file_name, "w");
     
     fprintf(output_file, "%s ", text);
