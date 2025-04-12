@@ -29,7 +29,7 @@ static void add_periods_before_capitals(char *line)
     {
         buff[buff_index++] = line[i];
         
-        if (line[i] == ' ' && i + 1 < length && isupper(line[i + 1])) 
+        if (i > 0 && line[i - 1] != '.' && line[i] == ' ' && i + 1 < length && isupper(line[i + 1])) 
         {
             buff[buff_index - 1] = '.';
             buff[buff_index++] = ' ';
