@@ -10,33 +10,36 @@
 #define MAX_LINE_LENGTH 256
 #define MAX_LINES 1000
 
-// For example: "hello World" becomes "hello. World"
+// For example: "Sentence one Xentence two Sentence three " becomes "Sentence one. Xentence two. Sentence three "
 static void add_periods_before_capitals(char *line) 
 {
     int length = (int)strlen(line);
-    char* result = (char*)malloc(((size_t)length * 2 + 1) * sizeof(char));
+    char* buff = (char*)malloc(sizeof(char) * (size_t)(length * 2));
     
-    if (result == NULL) 
+    if (!buff)
     {
-        perror("Memory allocation failed");
-        exit(EXIT_FAILURE);
+        return;
     }
     
-    int j = 0;
-
+    memset(buff, 0, sizeof(char) * (size_t)(length * 2));
+    
+    int buff_index = 0;
+    
     for (int i = 0; i < length; i++) 
     {
-        if (i > 0 && isupper(line[i]) && line[i - 1] == ' ') 
+        buff[buff_index++] = line[i];
+        
+        if (line[i] == ' ' && i + 1 < length && isupper(line[i + 1])) 
         {
-            result[j - 1] = '.';
-            result[j++] = ' ';
+            buff[buff_index - 1] = '.';
+            buff[buff_index++] = ' ';
         }
-        result[j++] = line[i];
     }
     
-    result[j] = '\0';
-    strcpy(line, result);
-    free(result);
+    buff[buff_index] = '\0';
+    
+    strcpy(line, buff); // buff is twice as big as line. Will cause overflow?
+    free(buff);
 }
 
 static void trim(char* line)
@@ -77,8 +80,6 @@ void format_captions_file(char* file_name)
             // Remove whitespace characters from beginning and ending of line
             trim(line);
             
-            add_periods_before_capitals(line);
-            
             // Keep track of line
             lines[line_count++] = strdup(line);
         }
@@ -86,15 +87,30 @@ void format_captions_file(char* file_name)
 
     fclose(input_file);
     
-    FILE* output_file = fopen(file_name, "w");
+    char* text = malloc(sizeof(char) * (size_t)line_count * MAX_LINE_LENGTH * 2); // * 2 to be sure enough space for periods?
+    
+    if (!text)
+    {
+        return;
+    }
+    
+    text[0] = '\0';
     
     for (int i = 0; i < line_count; i++)
     {
-        fprintf(output_file, "%s ", lines[i]);
+        strcat(text, lines[i]);
+        strcat(text, " ");
         free(lines[i]);
     }
     
+    add_periods_before_capitals(text);
+    
+    FILE* output_file = fopen(file_name, "w");
+    
+    fprintf(output_file, "%s ", text);
+    
     fclose(output_file);
+    free(text);
 }
 
 void traverse_directory(char* dir_path, void (*file)(char*))
