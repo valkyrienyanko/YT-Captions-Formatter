@@ -13,26 +13,32 @@
 // For example: "Sentence one Xentence two Sentence three " becomes "Sentence one. Xentence two. Sentence three "
 static void add_periods_before_capitals(char *line) 
 {
-    if(!line)
+    if (!line)
         return;
 
     size_t length = strlen(line);
     size_t buff_len = length;
-    /* Count periods required to then allocate with correct size */
-    for (int i = 1; i < length - 1; i++){
+    
+    // Count periods required to then allocate with correct size
+    for (size_t i = 1; i < length - 1; i++)
+    {
         if (line[i - 1] != '.' && line[i] == ' ' && isupper(line[i + 1]))
+        {
             buff_len += 1;
+        }
     }
 
 
-    char *buff = (char *)malloc(buff_len + 1);
+    char* buff = (char*)malloc(buff_len + 1);
+    
     if (!buff)
     {
         return;
     }
     
     int buff_index = 0;
-    for (int i = 0; i < length; i++)
+    
+    for (size_t i = 0; i < length; i++)
     {
         buff[buff_index++] = line[i];
         
