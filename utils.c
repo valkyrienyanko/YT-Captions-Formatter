@@ -34,23 +34,19 @@ static void add_periods_before_capitals(char *line)
     int buff_index = 0;
     for (int i = 0; i < length; i++)
     {
-        buff[buff_index] = line[i];
-        if(i == 0 || i == length - 1)
+        buff[buff_index++] = line[i];
+        
+        if (i == 0 || i == length - 1)
             continue;
 
         if (line[i - 1] != '.' && line[i] == ' ' && isupper(line[i + 1]))
         {
-            buff[buff_index++] = '.';
+            buff[buff_index - 1] = '.';
+            buff[buff_index++] = ' ';
         }
     }
-    buff[buff_index] = '\0';
     
-    if (buff_len > length) 
-    {
-        fprintf(stderr, "Error: string with periods is longer than the original buffer.\n");
-        free(buff);
-        return;
-    }
+    buff[buff_index] = '\0';
 
     strcpy(line, buff);
     free(buff);
