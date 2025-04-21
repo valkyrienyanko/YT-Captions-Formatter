@@ -13,16 +13,16 @@
 // For example: "Sentence one Xentence two Sentence three " becomes "Sentence one. Xentence two. Sentence three "
 static void add_periods_before_capitals(char *line) 
 {
-    if (!line)
+    size_t length = strlen(line);
+    if (!line || length == 0)
         return;
 
-    size_t length = strlen(line);
     size_t buff_len = length;
     
     // Count periods required to then allocate with correct size
     for (size_t i = 1; i < length - 1; i++)
     {
-        if (line[i - 1] != '.' && line[i] == ' ' && isupper(line[i + 1]))
+        if (isalpha(line[i - 1]) && line[i] == ' ' && isupper(line[i + 1]))
         {
             buff_len += 1;
         }
@@ -30,26 +30,20 @@ static void add_periods_before_capitals(char *line)
 
 
     char* buff = (char*)malloc(buff_len + 1);
-    
     if (!buff)
     {
         return;
     }
     
-    int buff_index = 0;
-    
-    for (size_t i = 0; i < length; i++)
+    buff[0] = line[0];
+    int buff_index = 1;
+    for (size_t i = 1; i < length; i++)
     {
-        buff[buff_index++] = line[i];
-        
-        if (i == 0 || i == length - 1)
-            continue;
-
-        if (line[i - 1] != '.' && line[i] == ' ' && isupper(line[i + 1]))
+        if (isalpha(line[i - 1]) && line[i] == ' ' && isupper(line[i + 1]))
         {
-            buff[buff_index - 1] = '.';
-            buff[buff_index++] = ' ';
+            buff[buff_index++] = '.';
         }
+        buff[buff_index++] = line[i];
     }
     
     buff[buff_index] = '\0';
