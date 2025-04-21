@@ -13,23 +13,39 @@
 // For example: "Sentence one Xentence two Sentence three " becomes "Sentence one. Xentence two. Sentence three "
 static void add_periods_before_capitals(char *line) 
 {
-    int length = (int)strlen(line);
-    char* buff = (char*)malloc(sizeof(char) * (size_t)(length * 2));
+    if (!line)
+        return;
+
+    size_t length = strlen(line);
+    size_t buff_len = length;
+    
+    // Count periods required to then allocate with correct size
+    for (size_t i = 1; i < length - 1; i++)
+    {
+        if (line[i - 1] != '.' && line[i] == ' ' && isupper(line[i + 1]))
+        {
+            buff_len += 1;
+        }
+    }
+
+
+    char* buff = (char*)malloc(buff_len + 1);
     
     if (!buff)
     {
         return;
     }
     
-    memset(buff, 0, sizeof(char) * (size_t)(length * 2));
-    
     int buff_index = 0;
     
-    for (int i = 0; i < length; i++) 
+    for (size_t i = 0; i < length; i++)
     {
         buff[buff_index++] = line[i];
         
-        if (i > 0 && line[i - 1] != '.' && line[i] == ' ' && i + 1 < length && isupper(line[i + 1])) 
+        if (i == 0 || i == length - 1)
+            continue;
+
+        if (line[i - 1] != '.' && line[i] == ' ' && isupper(line[i + 1]))
         {
             buff[buff_index - 1] = '.';
             buff[buff_index++] = ' ';
@@ -37,8 +53,8 @@ static void add_periods_before_capitals(char *line)
     }
     
     buff[buff_index] = '\0';
-    
-    strcpy(line, buff); // buff is twice as big as line. Will cause overflow?
+
+    strcpy(line, buff);
     free(buff);
 }
 
