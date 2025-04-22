@@ -14,6 +14,7 @@
 static void add_periods_before_capitals(char *line) 
 {
     size_t length = strlen(line);
+    
     if (!line || length == 0)
         return;
 
@@ -28,21 +29,22 @@ static void add_periods_before_capitals(char *line)
         }
     }
 
-
     char* buff = (char*)malloc(buff_len + 1);
+    
     if (!buff)
-    {
         return;
-    }
     
     buff[0] = line[0];
+    
     int buff_index = 1;
+    
     for (size_t i = 1; i < length; i++)
     {
         if (isalpha(line[i - 1]) && line[i] == ' ' && isupper(line[i + 1]))
         {
             buff[buff_index++] = '.';
         }
+        
         buff[buff_index++] = line[i];
     }
     
