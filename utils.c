@@ -10,6 +10,11 @@
 #define MAX_LINE_LENGTH 256
 #define MAX_LINES 1000
 
+static bool needs_period_before_capitol(char* line, size_t i)
+{
+    return isalpha(line[i - 1]) && line[i] == ' ' && isupper(line[i + 1]);
+}
+
 // For example: "Sentence one Xentence two Sentence three " becomes "Sentence one. Xentence two. Sentence three "
 static void add_periods_before_capitals(char *line) 
 {
@@ -23,7 +28,7 @@ static void add_periods_before_capitals(char *line)
     // Count periods required to then allocate with correct size
     for (size_t i = 1; i < length - 1; i++)
     {
-        if (isalpha(line[i - 1]) && line[i] == ' ' && isupper(line[i + 1]))
+        if (needs_period_before_capitol(line, i))
         {
             buff_len += 1;
         }
@@ -40,7 +45,7 @@ static void add_periods_before_capitals(char *line)
     
     for (size_t i = 1; i < length; i++)
     {
-        if (isalpha(line[i - 1]) && line[i] == ' ' && isupper(line[i + 1]))
+        if (needs_period_before_capitol(line, i))
         {
             buff[buff_index++] = '.';
         }
