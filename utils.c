@@ -10,7 +10,7 @@
 #define MAX_LINE_LENGTH 256
 #define MAX_LINES 1000
 
-static bool needs_period_before_capitol(char* line, size_t i)
+static bool needs_period_before_capitol(const char* line, size_t i)
 {
     return isalpha(line[i - 1]) && line[i] == ' ' && isupper(line[i + 1]);
 }
@@ -68,7 +68,7 @@ static void trim(char* line)
     *(end + 1) = '\0';
 }
 
-void format_captions_file(char* file_name)
+void format_captions_file(const char* file_name)
 {
     FILE* input_file = fopen(file_name, "r");
     
@@ -146,7 +146,7 @@ void format_captions_file(char* file_name)
     free(text);
 }
 
-void traverse_directory(char* dir_path, void (*file)(char*))
+void traverse_directory(const char* dir_path, void (*file)(const char*))
 {
     DIR* d;
     
@@ -168,7 +168,7 @@ void traverse_directory(char* dir_path, void (*file)(char*))
     }
 }
 
-bool contains_timestamp(char* line, int line_length)
+bool contains_timestamp(const char* line, int line_length)
 {
     int colon_index = -1;
 

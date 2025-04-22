@@ -6,7 +6,7 @@
 #define MAX_FILE_PATH_LENGTH 256
 #define INPUT_DIRECTORY "./input"
 
-void handle_file(char* file)
+void handle_file(const char* file)
 {
     char filepath[MAX_FILE_PATH_LENGTH];
     snprintf(filepath, sizeof(filepath), "%s/%s", INPUT_DIRECTORY, file);
