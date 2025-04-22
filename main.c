@@ -1,10 +1,75 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "utils.h"
 
 #define MAX_FILE_PATH_LENGTH 256
 #define INPUT_DIRECTORY "./input"
+
+void home_page();
+void options();
+void format_all_files();
+
+int main()
+{
+    home_page();
+    
+    printf("\nProgram ended normally\n");
+    return EXIT_SUCCESS;
+}
+
+void home_page()
+{
+    printf("---------- YouTube Captions Formatter ----------\n");
+    printf("(1) Format Files\n");
+    printf("(2) Configure Options\n");
+    printf("(3) Exit Program\n");
+
+    int choice = 0;
+    
+    while (true)
+    {
+        scanf("%d", &choice);
+        
+        switch (choice)
+        {
+            case 1:
+                format_all_files();
+                return;
+            case 2:
+                options();
+                return;
+            case 3:
+                return;
+            default:
+                printf("Enter a valid choice.\n");
+        }
+    }
+}
+
+void options()
+{
+    printf("---------- Options ----------\n");
+    printf("No options implemented yet sorry!\n");
+    printf("(1) Go Back\n");
+    
+    int choice = 0;
+    
+    while (true)
+    {
+        scanf("%d", &choice);
+        
+        switch (choice)
+        {
+            case 1:
+                home_page();
+                return;
+            default:
+                printf("Enter a valid choice.\n");
+        }
+    }
+}
 
 void handle_file(const char* file)
 {
@@ -16,16 +81,15 @@ void handle_file(const char* file)
     printf("  Processed '%s'\n", file);
 }
 
-int main()
+void format_all_files()
 {
-    printf("---------- YT Captions Formatter v1.0 ----------\n");
-    printf("This will remove all lines with timestamps and remove any blank lines from each file.\n");
-    printf("\n");
     printf("Formatting all files in '%s' folder...\n", INPUT_DIRECTORY);
     
     traverse_directory(INPUT_DIRECTORY, handle_file);
     
-    printf("\n");
-    printf("Program ended normally\n");
-    return EXIT_SUCCESS;
+    // Prevent terminal window from immediately closing after processing files
+    // User should be able to see what files were processed along with any other feedback
+    printf("\nPress Enter to continue...");
+    getchar(); // Consume the newline left by previous input
+    getchar(); // Wait for the user to press Enter
 }
